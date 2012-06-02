@@ -2,8 +2,7 @@
 
 main()  {
         int
-           ARR_SIZE =50,
-           arr[ARR_SIZE],
+           arr[200],
            DESIRED_VAL,
            i,j,
            lower,
@@ -13,10 +12,15 @@ main()  {
         printf("please enter desired value\n");
         scanf("%d",&DESIRED_VAL); 
         {   
-        for (i = 0; i < ARR_SIZE; i++)
+        FILE *in;
+        in= fopen("4.txt","r");
+        arr[200]=getchar;
+        fclose(in);
+        {
+        for (i = 0; i <200; i++)
             arr[i] = 2*i;
         lower = 0;
-        upper = ARR_SIZE - 1;
+        upper = 200 - 1;
         middle = (upper - lower) / 2;
         while((arr[middle] != DESIRED_VAL) && (lower <= upper))
         {
@@ -40,3 +44,4 @@ main()  {
               return(0);      
 }  
 }           
+}
