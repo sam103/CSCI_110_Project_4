@@ -1,70 +1,79 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<cstringt.h>
+#include<time.h>
 
-void quickSort(int arr[], int left, int right);
-int partition(int arr[], int left, int right, int pivot);
-void swap(int arr[], int a, int b);
+void quickSort(int a[], int right, int left);
+void swap(int a[], int x, int y);
+void fprintArray(FILE *out, int a[], int n);
 
-int main() {
-	int
-		x[50], i;
-
+int main(void) {
 	srand(time(NULL));
+	FILE
+		*out;
+	char 
+		outFilename[] = "quickSortOutput.txt";
+	int
+		i, x[50];
 
-	printf("50 random integers in range 0-99:\n");
+	out = fopen(outFilename, "w");
+	if (out == NULL) {
+		fprintf(stderr, "Can't open output file %s!\n", outFilename);
+		exit(1);
+	}
+
 	for (i = 0; i < 50; i++) {
 		x[i] = rand() % 100;
-		printf("%d ", x[i]);
 	}
-	printf("\n");
 
-	printf("Test Test:\n");
 	quickSort(x, 0, 49);
-	for (i = 0; i < 50; i++) {
-		printf("%d ", x[i]);
-	}
-	printf("\n");
+	fprintArray(out, x, 50);
 
+	fclose(out);
 	return 0;
 }
 
-void quickSort(int arr[], int left, int right) {
-	int 
-		pivot, newPivot;
-
-	if (left < right) {
-		pivot = 0;
-		newPivot = partition(arr, left, right, pivot);
-		quickSort(arr, left, newPivot - 1);
-		quickSort(arr, newPivot + 1, right);
-	}
-}
-
-int partition(int arr[], int left, int right, int pivot) {
+void quickSort(int a[], int leftBound, int rightBound) {
 	int
-		pivotValue, storeIndex, i;
-	
-	pivotValue = arr[pivot];
-	swap(arr, arr[pivot], arr[right]);
-	storeIndex = left;
+		rightPoint, leftPoint, pivot, pivotValue;
+	pivot = leftBound;
+	leftPoint = leftBound;
+	rightPoint = rightBound;
+	pivotValue = a[pivot];
 
-	for (i = left; i < right; ) {
-		if (arr[i] < pivotValue) {
-			swap(arr, arr[i], arr[storeIndex]);
-			storeIndex++;
+	if (leftBound >= rightBound) return;
+	while (leftPoint < rightPoint) {
+		while ((a[leftPoint] <= pivotValue)
+				&& (leftPoint < rightPoint)) {
+			++leftPoint;
+		}
+		while (a[rightPoint] > pivotValue) {
+			--rightPoint;
+		}
+		if (leftPoint < rightPoint) {
+			swap(a, leftPoint, rightPoint);
 		}
 	}
-	swap(arr, arr[storeIndex], arr[right]);
 
-	return storeIndex;
+	a[leftBound] = a[rightPoint];
+	a[rightPoint] = pivotValue;
+
+	quickSort(a, leftBound, rightPoint - 1);
+	quickSort(a, rightPoint + 1, rightBound);
 }
 
-void swap(int arr[], int a, int b) {
-	int 
-		temp;
+void swap(int a[], int x, int y) {
+	int temp;
+	temp = a[x];
+	a[x] = a[y];
+	a[y] = temp;
+}
 
-	temp = arr[a];
-	arr[a] = arr[b];
-	arr[b] = temp;
+void fprintArray(FILE *out, int a[], int n) {
+	int i;
+	for (i = 0; i < n; i++) {
+		if (i % 10 == 0) fprintf(out, "\n");
+		fprintf(out, "%3d", a[i]);
+	}
+	fprintf(out, "\n");
 }
